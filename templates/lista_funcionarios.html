@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Funcionários{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Funcionários</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <form method="GET" action="" style="margin-bottom: 10px;">
+            <input type="text" name="filtro" placeholder="Buscar por nome..." value="{{ filtro }}" onkeypress="if(event.key === 'Enter'){ this.form.submit(); }">
+        </form>
+        <button onclick="abrirPopup()">Cadastrar Funcionário</button>
+    </div>
+
+    <table border="1" cellpadding="10" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <a href="?ordem=username&direcao={{ 'asc' if direcao == 'desc' else 'desc' }}">
+                        Nome {{ '▼' if ordem == 'username' and direcao == 'desc' else '▲' if ordem == 'username' else '' }}
+                    </a>
+                </th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in funcionarios %}
+            <tr>
+                <td><input type="checkbox" name="selecionado" value="{{ f.id }}"></td>
+                <td>{{ f.username }}</td>
+                <td>{{ f.email }}</td>
+                <td>{{ 'Ativo' if f.is_active else 'Inativo' }}</td>
+                <td>{{ 'Administrador' if f.is_admin else 'Funcionário' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- POPUP -->
+<div class="popup" id="popupFuncionario">
+    <h3>Cadastrar Novo Funcionário</h3>
+    <form method="POST" action="{{ url_for('dashboard.cadastrar_funcionario') }}">
+        <label>Nome de usuário:</label><br>
+        <input type="text" name="username" required><br>
+
+        <label>Email corporativo:</label><br>
+        <input type="email" name="email" required><br>
+
+        <label>Senha:</label><br>
+        <input type="password" name="password" required><br>
+
+        <label>Confirmar Senha:</label><br>
+        <input type="password" name="confirm_password" required><br>
+
+        <label>
+            <input type="checkbox" name="is_admin"> Tornar administrador
+        </label><br><br>
+
+        <button type="submit">Cadastrar</button>
+        <button type="button" onclick="fecharPopup()">Cancelar</button>
+    </form>
+</div>
+
+<script>
+function abrirPopup() {
+    document.getElementById('popupFuncionario').style.display = 'block';
+}
+
+function fecharPopup() {
+    document.getElementById('popupFuncionario').style.display = 'none';
+}
+</script>
+
+<style>
+.popup {
+    width: 80vw;
+    height: 80vh;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    z-index: 1000;
+    display: none;
+    overflow-y: auto;
+}
+</style>
+{% endblock %}

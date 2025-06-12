@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Painel VPN</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Entrar no Painel VPN</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="post">
+            <input type="text" name="username" placeholder="Usuário">
+            <input type="password" name="password" placeholder="Senha">
+            <button type="submit">Entrar</button>
+        </form>
+        <p style="text-align:center; margin-top:10px;">
+            <a href="{{ url_for('auth.forgot_password') }}">Esqueceu sua senha?</a>
+        </p>
+    </div>
+</body>
+</html>

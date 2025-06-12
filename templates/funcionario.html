@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h2>Minhas VPNs</h2>
+
+  <form method="POST" action="{{ url_for('dashboard.gerar_vpn') }}">
+    <button type="submit" class="btn btn-primary mb-3">Gerar Nova VPN</button>
+  </form>
+
+  {% if vpns %}
+  <form method="POST" action="{{ url_for('dashboard.remover_vpns') }}">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Identificador</th>
+          <th>Data de Criação</th>
+          <th>Expira em</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vpn in vpns %}
+        <tr>
+          <td><input type="checkbox" name="selecionadas" value="{{ vpn.identificador }}"></td>
+          <td>{{ vpn.identificador }}</td>
+          <td>{{ vpn.criado_em.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>{{ vpn.expira_em.strftime('%d/%m/%Y %H:%M') }}</td>
+          <td>
+            <a href="{{ url_for('dashboard.download_vpn', ident=vpn.identificador) }}"
+               class="btn btn-sm btn-success">Download</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-danger">Remover Selecionadas</button>
+  </form>
+  {% else %}
+    <p>Você ainda não criou nenhuma VPN.</p>
+  {% endif %}
+</div>
+{% endblock %}
